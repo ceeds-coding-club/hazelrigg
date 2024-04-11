@@ -4,12 +4,14 @@
 
 ## 11/04/2024 
 
-Lisa - monthly rainfall
+Plan is to start work on individual plots that we'll display on the shiny app. Loose ideas for plots are:
 
-Rachel - rainfall records
+Lisa - monthly rainfall (selecting year comparisons)
 
-Marta - moving average viz
+Rachel - rainfall records (historic vs. current year)
+
+Marta - moving average viz (groundwork for moving averages)
 
 Ingrid - 
 
-James - commuting windows
+James - commuting windows (rain / dry in the hourly weather data)
