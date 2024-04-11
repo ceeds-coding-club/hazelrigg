@@ -40,19 +40,4 @@ hr <- read_xls("Hazelrigg Rainfall 1966-.xls",
 
 ```
 
-```{r commuter}
-thunder <- read_xls("Hazelrigg Daily Obs 1966-.xls",
-               sheet = 2) |>
-    janitor::clean_names() %>% 
-    select(year, month, day, thunder) %>%
-    arrange(year, month, day) %>% 
-    mutate(thunder = as.numeric(thunder),
-           thunder = ifelse(is.na(thunder), 0, thunder)) %>% 
-    group_by(year, month) %>% 
-    summarise(thunder = sum(thunder)) %>% 
-    group_by(month) %>% 
-    summarise(thunder = mean(thunder))
-
-ggplot(thunder, aes(month, thunder)) + geom_line()
-```
 
