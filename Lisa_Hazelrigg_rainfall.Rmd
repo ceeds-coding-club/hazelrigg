@@ -11,6 +11,7 @@ library(tidyverse)
 library(readxl)
 library(janitor)
 library (lubridate)
+library(wesanderson)
 ```
 
 ## Sam's data wrangling
@@ -46,7 +47,9 @@ hr_annual <- hr %>%
     mutate(month = month(month, label = TRUE))
 
 hr_monthly <- hr_annual %>% 
-   group_by(year, month) %>% 
+    group_by(year) %>% 
+    mutate(ann_ave = mean(rainfall_mm)) %>% 
+   group_by(year, month, ann_ave) %>% 
    summarise(monthly_rain = mean(rainfall_mm))
 
 hr_overall = hr_monthly %>% 
@@ -58,7 +61,10 @@ hr_overall = hr_monthly %>%
 1. First make it a function, with a single year highlighted
 ```{r}
 
-highlight_month <- function(yr = 1982){
+highlight_month <- function(yr = year(today())){
+    pal <- wes_palette("Zissou1", n = length(yr), type = "continuous") #generate palette
+    hr_monthly_sub <- hr_monthly %>%                                #subset dataset for highlights
+    filter(year%in%yr)
 ggplot() +
    geom_line(data = hr_monthly, aes(x = month, y = monthly_rain, group = year),
              show.legend = F, 
@@ -68,18 +74,29 @@ ggplot() +
     geom_line(data = hr_overall, aes(x=month, y = rain, group = 1), 
               colour = "grey40",
               linewidth = 1.2)+
-    geom_line(data = subset(hr_monthly, year == yr), 
-              aes(x = month, y = monthly_rain, colour = year, group = 1))+
+    geom_line(data = hr_monthly_sub, 
+              aes(x = month, y = monthly_rain, colour = year, group = year),
+              linewidth = 1.1)+
     labs(y = "Average rain (mm)", x = "Month")+
+    scale_colour_manual(values = pal) + 
+    scale_x_discrete(expand = c(0.01, 0)) +
+  scale_y_continuous(expand = c(0, 0)) + 
    theme_classic()
 }
 
-highlight_month(yr = 1995)
+highlight_month(yr = c(2020:2024))
+high
+
 ```
 
 2. now try to include multiple years?
 
+I think we'll have to make a separate dataset?
 ```{r}
+test_years = c(1978, 1982, 1989)
+
+hr_monthly_sub <- hr_monthly %>% 
+    filter(year%in%yr)
 
 ```
 
