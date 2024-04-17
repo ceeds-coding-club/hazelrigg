@@ -1,5 +1,48 @@
-library(tidyverse)
+---
+title: "hazelrigg_cleaning"
+author: "Samuel Taylor"
+date: "2024-04-04"
+output: html_document
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(readxl)
+library(janitor)
+```
+
+## An attempt at data cleaning for Hazelrig rainfall record
+
+Some arbitrary choices here... might be better to set mis-typed values to NA?
+
+Piping within the mutate here was a new discovery for me - genius!
+
+```{r rain}
+hr <- read_xls("Hazelrigg Rainfall 1966-.xls",
+               range = "year!A1:BI367",
+               col_types = c("numeric", "numeric", rep("text", 59))
+) |>
+  pivot_longer("1966":"2024", names_to = "year", values_to = "rainfall_mm") |>
+  mutate(rainfall_mm = rainfall_mm |>
+           #replace Trace|trace|tr|Tr with 0.01
+           str_replace_all("[Tt]{1}.*\\b", "0.01") |>
+           #replace anything starting with "a point"." with "0."
+           # some ambiguity because could be that ".0" was typed instead of "0."
+           str_replace_all("^\\.(.*)", "0.\\1") |>
+           #remove trailing point symbol
+           str_replace_all("(.*)\\.$", "\\1") |>
+           #convert to numeric and round to 2 dp
+           as.numeric() #|> round(digits = 2)
+  ) |>
+  arrange(year, Month, Date) |>
+  clean_names()
+
+```
+
+Hourly data retrieved from data loggers, but note these are only last 2 years.
+
+```{r, hourly}
 # HAZELRIGG: Campbell Scientific Automatic Weather Stations
 # 
 # (A)	Main Hazelrigg meteorological enclosure, GR 493 578, c. 95m asl.
@@ -27,11 +70,11 @@ library(tidyverse)
 # AB - Air Pressure (mbar)
 
 
-log<-read.csv('data/loggers/CCSL006413_A_Ten_Min.dat', skip=1)
+log<-read.csv('loggers/CCSL006413_A_Ten_Min.dat', skip=1)
 units<-log[1:2,]
 
 # drop units and logger metadata
-log<-log[-c(1:2),-c(2:4)] %>% 
+log<-log[-c(1:2),] %>% 
     clean_names()
 
 # create hourly values
@@ -50,3 +93,7 @@ hour<-log %>% mutate(date = str_split_fixed(timestamp, n=2, pattern = ' ')[,1],
               rainfall = sum(rain_mm_tot),
               air_pressure = mean(bp_mbar)
               )
+```
+
+
+
