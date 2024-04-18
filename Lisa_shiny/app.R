@@ -13,13 +13,13 @@ ui <- fluidPage(
       h3("Hazelrigg weather station"),
     #selecting years
     plotOutput(outputId = "monthly_rain"),
-    fluidRow(column(width = 6,
+    fluidRow(column(width = 3,
                     selectInput(inputId = "year_sel", 
                                 label = "Pick year(s) to highlight", 
                                 selected = year(today()), 
                                 choices = yrs, 
                                 multiple = T)),
-             column(width = 6,
+             column(width = 9,
                     sliderInput(inputId = "year_slid",
                                 label = "...or set a range", 
                                 min = 1966, 
@@ -27,7 +27,7 @@ ui <- fluidPage(
                                 value = c(2024, 2024), 
                                 sep = "", 
                                 dragRange = T,
-                                width = '100%')))
+                                width = '60%')))
 )
 
 server <- function(input, output, session){

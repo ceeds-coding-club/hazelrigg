@@ -44,7 +44,7 @@ hr_overall = hr_monthly %>%
     group_by(month) %>% 
     summarise(rain = mean(monthly_rain))
 
-# function for plotting -----------------------
+# function for plotting (Lisa) -----------------------
 
 highlight_month <- function(yr = year(today())){
     pal <- wes_palette("Zissou1", n = length(yr), type = "continuous") #generate palette
