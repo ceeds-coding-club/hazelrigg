@@ -1,4 +1,5 @@
 # Script creates commuting shiny panel [weather at 7-9 and 4-6]
+source('James_shiny/setup.R')
 
 commute<-hour %>% 
     filter(hour %in% c(7,8,16,17)) %>%
