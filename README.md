@@ -12,6 +12,6 @@ Rachel - rainfall records (historic vs. current year)
 
 Marta - moving average viz (groundwork for moving averages)
 
-Ingrid - 
+Ingrid - comparing monthly data with other locations
 
 James - commuting windows (rain / dry in the hourly weather data)
